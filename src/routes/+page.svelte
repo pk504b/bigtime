@@ -1,6 +1,5 @@
 <script>
     import { icons } from "$lib/icons";
-    import { base } from '$app/paths';
     function handleForm() {}
 </script>
 
@@ -11,14 +10,14 @@
 <div class="bg-lbg text-lpm dark:bg-dbg dark:text-dpm font-primary flex flex-col">
     <header class="">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="{base}/" class="uppercase text-sm tracking-[4px] font-light px-5 py-3 bg-lsc dark:text-dbg">Bigtime</a>
+            <a href="/" class="uppercase text-sm tracking-[4px] font-light px-5 py-3 bg-lsc dark:text-dbg">Bigtime</a>
             <button class="lg:hidden text-4xl px-3">{@html icons.menu}</button>
             <nav class="hidden lg:block">
                 <ul class="flex gap-5">
-                    <li><a class="flex items-center gap-1 transition hover:bg-dpm hover:text-dbg px-3 py-1" href="{base}/clock">{@html icons.clock} Clock</a></li>
-                    <li><a class="flex items-center gap-1 transition hover:bg-dpm hover:text-dbg px-3 py-1" href="{base}/timer">{@html icons.timer} Timer</a></li>
-                    <li><a class="flex items-center gap-1 transition hover:bg-dpm hover:text-dbg px-3 py-1" href="{base}/stopwatch">{@html icons.stopwatch} Stopwatch</a></li>
-                    <li><a class="flex items-center gap-1 transition hover:bg-dpm hover:text-dbg px-3 py-1" href="{base}/pomodoro">{@html icons.pomodoro} Pomodoro</a></li>
+                    <li><a class="flex items-center gap-1 transition hover:bg-dpm hover:text-dbg px-3 py-1" href="/clock">{@html icons.clock} Clock</a></li>
+                    <li><a class="flex items-center gap-1 transition hover:bg-dpm hover:text-dbg px-3 py-1" href="/timer">{@html icons.timer} Timer</a></li>
+                    <li><a class="flex items-center gap-1 transition hover:bg-dpm hover:text-dbg px-3 py-1" href="/stopwatch">{@html icons.stopwatch} Stopwatch</a></li>
+                    <li><a class="flex items-center gap-1 transition hover:bg-dpm hover:text-dbg px-3 py-1" href="/pomodoro">{@html icons.pomodoro} Pomodoro</a></li>
                 </ul>
             </nav>
         </div>
@@ -44,31 +43,31 @@
 
             <div class="flex flex-wrap gap-8 p-4 text-center">
 
-                <a href="{base}/clock" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
+                <a href="/clock" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
                     <span class="text-8xl">{@html icons.clock}</span>
                     <h3 class="text-xl font-bold mt-4 mb-2">Clock</h3>
                     <p class="text-sm">Clock big enough to never miss a beat</p>
                 </a>
 
-                <a href="{base}/clock" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
+                <a href="/clock" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
                     <span class="text-8xl">{@html icons.worldClock}</span>
                     <h3 class="text-xl font-bold mt-4 mb-2">World Clock</h3>
                     <p class="text-sm">Make your way through timezones</p>
                 </a>
 
-                <a href="{base}/timer" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
+                <a href="/timer" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
                     <span class="text-8xl">{@html icons.timer}</span>
                     <h3 class="text-xl font-bold mt-4 mb-2">Timer</h3>
                     <p class="text-sm">The Good old Countdown Timer</p>
                 </a>
 
-                <a href="{base}/stopwatch" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
+                <a href="/stopwatch" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
                     <span class="text-8xl">{@html icons.stopwatch}</span>
                     <h3 class="text-xl font-bold mt-4 mb-2">Stopwatch</h3>
                     <p class="text-sm">Stopwatch so that you don't have to stop</p>
                 </a>
 
-                <a href="{base}/pomodoro" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
+                <a href="/pomodoro" class="flex-1 border dark:border-dpm min-w-40 flex flex-col items-center justify-center p-4 py-8 hover:scale-105 transition rounded-xl">
                     <span class="text-8xl">{@html icons.pomodoro}</span>
                     <h3 class="text-xl font-bold mt-4 mb-2">Pomodoro</h3>
                     <p class="text-sm">Stay productive with Pomodoro Cycles</p>

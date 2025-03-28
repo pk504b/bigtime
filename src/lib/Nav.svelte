@@ -1,7 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import { icons } from "$lib/icons";
-    import { base } from '$app/paths';
 </script>
 
 <div
@@ -10,7 +9,7 @@
     <div class="container mx-auto flex md:gap-10">
 
         <a
-            href="{base}/clock"
+            href="/clock"
             class="flex-grow flex flex-col-reverse items-center py-2 {$page.url.pathname.includes(
                 '/clock',
             )
@@ -22,7 +21,7 @@
         </a>
 
         <a
-            href="{base}/timer"
+            href="/timer"
             class="flex-grow flex flex-col-reverse items-center py-2 {$page.url
                 .pathname === '/timer'
                 ? 'bg-lsc dark:bg-dsc text-lpm rounded-md shadow-md'
@@ -33,7 +32,7 @@
         </a>
 
         <a
-            href="{base}/stopwatch"
+            href="/stopwatch"
             class="flex-grow flex flex-col-reverse items-center py-2 {$page.url
                 .pathname === '/stopwatch'
                 ? 'bg-lsc dark:bg-dsc text-lpm rounded-md shadow-md'
@@ -44,7 +43,7 @@
         </a>
 
         <a
-            href="{base}/pomodoro"
+            href="/pomodoro"
             class="flex-grow flex flex-col-reverse items-center py-2 {$page.url
                 .pathname === '/pomodoro'
                 ? 'bg-lsc dark:bg-dsc text-lpm rounded-md shadow-md'

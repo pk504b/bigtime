@@ -4,7 +4,6 @@
     import { page } from "$app/stores";
     import { afterUpdate, onMount } from "svelte";
     import { icons } from "$lib/icons";
-    import { base } from '$app/paths';
 
     let query:string
     let inputElement:HTMLInputElement
@@ -57,7 +56,7 @@
 <header class="">
     <div class="container mx-auto max-w-7xl flex justify-between text-sm md:font-bold">
         <!-- Logo -->
-        <a href="{base}/" class="uppercase tracking-[4px] font-normal px-4 md:px-6 bg-lsc dark:text-dbg flex items-center">Bigtime</a>
+        <a href="/" class="uppercase tracking-[4px] font-normal px-4 md:px-6 bg-lsc dark:text-dbg flex items-center">Bigtime</a>
         
         <div class="flex gap-4 items-center py-2">
             <!-- Search -->
@@ -74,7 +73,7 @@
                     <ul bind:this={resultsElement} class="absolute hidden py-2 ">
                         {#each results as result}
                             <li class="py-1 my-1">
-                                <a class="block w-full" href="{base}/clock/{result.slug}">{result.displayName}</a>
+                                <a class="block w-full" href="/clock/{result.slug}">{result.displayName}</a>
                             </li>
                         {/each}
                     </ul>
