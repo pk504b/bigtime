@@ -4,11 +4,11 @@
     import PageStructure from '$lib/PageStructure.svelte';
     import { getTimezone } from '$lib';
     
-    let timezone:string,
-        city:string,
-        country:string,
-        is12H:boolean = true,
-        now:DateTime
+    let timezone:string
+    let city:string
+    let country:string
+    let is12H:boolean = true
+    let now:DateTime
 
     $: slug = $page.params.slug
 
