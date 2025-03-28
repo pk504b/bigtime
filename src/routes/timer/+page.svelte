@@ -17,6 +17,8 @@
     }
 
     function handleWheel(e: WheelEvent) {
+        if (timer.started) return;
+        
         updateUnit(su.unit, e.deltaY);
     }
 
