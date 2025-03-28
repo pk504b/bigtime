@@ -90,7 +90,7 @@
             {/if}
 
             <a href='https://ko-fi.com/pk504b' target='_blank'>
-                <img src='https://storage.ko-fi.com/cdn/kofi1.png?v=3' alt='Buy Me a Coffee at ko-fi.com' class="h-8 md:h-10" />
+                {@html icons.coffee}
             </a>
             
         </div>

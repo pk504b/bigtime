@@ -59,7 +59,7 @@
 </PageStructure>
 
 {#if sw.timestamps.length > 0}
-    <div class="absolute top-4 right-4 text-sm dark:text-dpm">
+    <div class="absolute top-10 right-4 text-sm dark:text-dpm">
         <p class="mb-2 text-center">Timestamps</p>
         <ol class="max-h-40 overflow-y-scroll no-scrollbar italic" bind:this={ol}>
             {#each sw.timestamps as stamp, i}
