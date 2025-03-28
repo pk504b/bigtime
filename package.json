@@ -7,14 +7,17 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"gh-pages": "pnpm build && pnpx gh-pages -d build"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-static": "^3.0.8",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/gtag.js": "^0.0.20",
 		"autoprefixer": "^10.4.19",
+		"gh-pages": "^6.3.0",
 		"postcss": "^8.4.40",
 		"super-sitemap": "^0.15.0",
 		"svelte": "^4.2.7",

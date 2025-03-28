@@ -2,8 +2,6 @@
     import { DateTime } from 'luxon'
     import PageStructure from '$lib/PageStructure.svelte';
     import { geoipData } from '$lib/stores/clock';
-    import Header from '$lib/Header.svelte';
-    import Nav from '$lib/Nav.svelte';
     
     let timezone:string,
         city:string,

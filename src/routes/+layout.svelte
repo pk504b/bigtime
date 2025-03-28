@@ -3,8 +3,7 @@
     import { page } from "$app/stores";
     import { onMount } from "svelte";
     import { geoipData } from "$lib/stores/clock";
-    import Analytics from "$lib/analytics.svelte";
-    import { inject } from '@vercel/analytics'
+    import { base } from '$app/paths';
 
     onMount(async() => {
         try {
@@ -18,16 +17,16 @@
 </script>
 
 <svelte:head>
-    <meta property="og:image" content="/og-card.png">
+    <link rel="shortcut icon" href="{base}/logo.svg" type="image/x-icon">
+    <meta property="og:image" content="{base}/og-card.png">
     <meta property="og:type" content="website">
     <meta property="og:url" content={$page.url.href}>
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="/og-card.png">
+    <meta name="twitter:image" content="{base}/og-card.png">
     <meta name="twitter:url" content={$page.url.href}>
 </svelte:head>
 
-<Analytics />
 <slot />
 
 <style>
