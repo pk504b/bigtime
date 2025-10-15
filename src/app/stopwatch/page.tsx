@@ -10,30 +10,28 @@ import {
 import { DateTime, Duration } from "luxon";
 import { useEffect, useRef, useState } from "react";
 
-const initialMessege = "Hit Play Button to start the Stopwatch";
+const INITIAL_MSG = "Hit Play Button to start the Stopwatch";
 
 export default function Page() {
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(Duration.fromMillis(0));
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [message, setMessage] = useState(initialMessege);
+  const [message, setMessage] = useState(INITIAL_MSG);
   const [timestamps, setTimestamps] = useState<Duration[]>([]);
   const olRef = useRef<HTMLOListElement>(null);
 
-  const formattedDuration = Duration.fromMillis(duration);
+  // const formattedDuration = Duration.fromMillis(duration);
 
   useEffect(() => {
     if (isRunning) {
-      const startTime = Date.now() - duration;
+      const startTime = DateTime.now().minus(duration);
       intervalRef.current = setInterval(() => {
-        setDuration(Date.now() - startTime);
+        setDuration(DateTime.now().diff(startTime));
       }, 10);
       setMessage("Stopwatch Running...");
     } else {
       clearInterval(intervalRef.current!);
-      duration === 0
-        ? setMessage(initialMessege)
-        : setMessage("Stopwatch Paused...");
+      duration.as("seconds") > 0 && setMessage("Stopwatch Paused");
     }
 
     return () => {
@@ -49,20 +47,21 @@ export default function Page() {
   }, [timestamps]);
 
   function reset() {
-    setDuration(0);
+    setDuration(Duration.fromMillis(0));
     setIsRunning(false);
     setTimestamps([]);
+    setMessage(INITIAL_MSG);
   }
 
   function recordTimestamp() {
-    setTimestamps((prev) => [...prev, formattedDuration]);
+    setTimestamps((prev) => [...prev, duration]);
   }
 
   return (
     <>
       <Layout
         top={message}
-        mid={<Mid formattedDuration={formattedDuration} />}
+        mid={<Mid duration={duration} />}
         bottom={
           <Bottom
             isRunning={isRunning}
@@ -77,13 +76,13 @@ export default function Page() {
         <div className="absolute top-10 right-4 text-sm dark:text-dpm">
           <p className="mb-2 text-center">Timestamps</p>
           <ol ref={olRef} className="max-h-40 overflow-y-scroll no-scrollbar ">
-            {timestamps.map((s, i) => (
+            {timestamps.map((ts, i) => (
               <li key={i} className="list-none font-mono">
                 <span className="italic">
                   #{(i + 1).toString().padStart(2, "0")}
                 </span>
                 <span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;{s.toFormat("hh:mm:ss SSS")}
+                  &nbsp;&nbsp;&nbsp;&nbsp;{ts.toFormat("hh:mm:ss SSS")}
                 </span>
               </li>
             ))}
@@ -94,15 +93,15 @@ export default function Page() {
   );
 }
 
-function Mid({ formattedDuration }: { formattedDuration: Duration }) {
+function Mid({ duration }: { duration: Duration }) {
   return (
     <>
       <span>
-        {formattedDuration.hours > 0 ? formattedDuration.get("hour") : ""}
+        {duration.hours > 0 ? duration.get("hour") : ""}
       </span>
-      <span>{formattedDuration.toFormat("mm:ss")}</span>
+      <span>{duration.toFormat("mm:ss")}</span>
       <span className="text-[5vw] ml-3">
-        {formattedDuration.toFormat("ss SSS").split(" ")[1]}
+        {duration.toFormat("ss SSS").split(" ")[1]}
       </span>
     </>
   );

@@ -12,14 +12,14 @@ import {
 } from "@/lib/icons";
 import Layout from "@/components/Layout";
 
-const initialMessege = "Swipe Up/Down to Set Timer";
+const INITIAL_MSG = "Swipe Up/Down to Set Timer";
 
 export default function Page() {
   const [duration, setDuration] = useState(Duration.fromMillis(0));
   const [isRunning, setIsRunning] = useState(false);
   const [started, setStarted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [message, setMessage] = useState(initialMessege);
+  const [message, setMessage] = useState(INITIAL_MSG);
 
   function update(unit: any, delta: number) {
     if (isRunning || started) return;
@@ -71,7 +71,7 @@ export default function Page() {
     if (isRunning) return;
     setDuration(Duration.fromMillis(0));
     setStarted(false);
-    setMessage(initialMessege);
+    setMessage(INITIAL_MSG);
   }
 
   function plusOne() {
