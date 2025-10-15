@@ -1,129 +1,97 @@
 "use client";
 
+import React, { useState, useEffect, useRef, use } from "react";
+import { Duration } from "luxon";
+import Layout from "@/components/Layout";
+import { PauseIcon, PlayIcon, ResetIcon } from "@/lib/icons";
 
-// components/Stopwatch.js
-import { useState, useEffect } from 'react';
-import { DateTime } from 'luxon';
+const INITIAL_MSG = "Hit Play to Start Pomodoro Cycle";
+const FOCUS_TIME = { minutes: 25 };
+const BREAK_TIME = { minutes: 5 };
 
-const Stopwatch = () => {
-  const [isRunning, setIsRunning] = useState(false); // Whether the stopwatch is running or not
-  const [timeElapsed, setTimeElapsed] = useState(0); // Time in milliseconds
-  const [lapTimes, setLapTimes] = useState([]); // Array to store collected lap times
+export default function Page() {
+  const [isRunning, setIsRunning] = useState(false);
+  const [isBreak, setIsBreak] = useState(false);
+  const [duration, setDuration] = useState(Duration.fromObject(FOCUS_TIME));
+  const [cycleCount, setCycleCount] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [message, setMessage] = useState(INITIAL_MSG);
 
-  // Format the current elapsed time using Luxon (HH:mm:ss:SSS format)
-  const formattedTime = DateTime.fromMillis(timeElapsed).toFormat('mm:ss:SSS');
-
+  // Handle the timer update
   useEffect(() => {
-    let timer;
-
-    // Start the timer when the stopwatch is running
     if (isRunning) {
-      const startTime = Date.now() - timeElapsed; // Synchronize the start time
-
-      timer = setInterval(() => {
-        setTimeElapsed(Date.now() - startTime); // Continuously update the elapsed time
-      }, 10); // Update every 10ms
+      intervalRef.current = setInterval(() => {
+        setDuration((prev) => prev.minus(1000));
+      }, 1000);
+      setMessage(isBreak ? "Break Time..." : "Focus Session...");
     } else {
-      clearInterval(timer); // Stop the timer when it's not running
+      clearInterval(intervalRef.current!);
+      isBreak
+        ? duration.as("minutes") !== 5 && setMessage("Break Paused")
+        : duration.as("minutes") !== 25 && setMessage("Focus Session Paused");
     }
 
-    return () => clearInterval(timer); // Clean up interval when component is unmounted
-  }, [isRunning, timeElapsed]);
+    return () => {
+      clearInterval(intervalRef.current!);
+    };
+  }, [isRunning, isBreak]);
 
-  // Function to start/stop the stopwatch
-  const toggleStopwatch = () => {
-    setIsRunning(prev => !prev);
+  // Timer cycle logic
+  useEffect(() => {
+    if (duration.as("seconds") <= 0) {
+      if (isBreak) {
+        // Switch to Focus Mode
+        setIsBreak(false);
+        setDuration(Duration.fromObject(FOCUS_TIME));
+        setCycleCount(cycleCount + 1);
+      } else {
+        // Switch to Break Mode
+        setIsBreak(true);
+        setDuration(Duration.fromObject(BREAK_TIME));
+      }
+    }
+  }, [duration, isBreak]);
+
+  const startPauseTimer = () => {
+    setIsRunning((prev) => !prev);
   };
 
-  // Function to reset the stopwatch
-  const resetStopwatch = () => {
+  const reset = () => {
     setIsRunning(false);
-    setTimeElapsed(0);
-    setLapTimes([]); // Clear collected lap times
-  };
-
-  // Function to collect a timestamp (lap time)
-  const collectLapTime = () => {
-    setLapTimes(prevLaps => [...prevLaps, formattedTime]);
+    setIsBreak(false);
+    setDuration(Duration.fromObject(FOCUS_TIME));
+    setCycleCount(0);
+    setMessage(INITIAL_MSG);
   };
 
   return (
-    <div style={styles.container}>
-      <h1>Stopwatch</h1>
-      <div style={styles.timeDisplay}>{formattedTime}</div>
-      
-      <div style={styles.buttons}>
-        <button onClick={toggleStopwatch} style={styles.button}>
-          {isRunning ? 'Stop' : 'Start'}
-        </button>
-        <button onClick={resetStopwatch} style={styles.button}>Reset</button>
-      </div>
-      
-      <button onClick={collectLapTime} style={styles.lapButton} disabled={!isRunning}>
-        Collect Lap Time
-      </button>
+    <Layout
+      top={message}
+      mid={
+        <>
+          <span className="text-[2vw] italic">#{cycleCount} </span>
+          <span>{duration.toFormat("mm:ss")}</span>
+        </>
+      }
+      bottom={
+        <div className="flex items-center justify-center gap-12">
+          <button className="cursor-pointer" onClick={reset}>
+            <ResetIcon size={40} />
+          </button>
 
-      <div style={styles.lapList}>
-        <h3>Collected Lap Times:</h3>
-        <ul>
-          {lapTimes.map((lap, index) => (
-            <li key={index}>{lap}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
+          <button
+            className="cursor-pointer"
+            onClick={() => {
+              cycleCount === 0 && setCycleCount(1);
+              setIsRunning(!isRunning);
+            }}
+          >
+            {isRunning ? <PauseIcon size={80} /> : <PlayIcon size={80} />}
+          </button>
+
+          <button className="invisible">{<ResetIcon size={40} />}</button>
+        </div>
+      }
+    />
   );
-};
-
-// Some simple styles for the stopwatch
-const styles = {
-  container: {
-    textAlign: 'center',
-    padding: '20px',
-    border: '2px solid #333',
-    borderRadius: '10px',
-    maxWidth: '300px',
-    margin: 'auto',
-    backgroundColor: '#f9f9f9',
-  },
-  timeDisplay: {
-    fontSize: '2.5rem',
-    fontWeight: 'bold',
-    margin: '20px 0',
-  },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: '10px',
-  },
-  button: {
-    padding: '10px 20px',
-    fontSize: '1rem',
-    backgroundColor: '#007BFF',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-  },
-  lapButton: {
-    padding: '10px 20px',
-    fontSize: '1rem',
-    backgroundColor: '#28a745',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-    marginTop: '15px',
-  },
-  lapList: {
-    marginTop: '20px',
-    textAlign: 'left',
-    maxHeight: '200px',
-    overflowY: 'scroll',
-  }
-};
-
-export default Stopwatch;
+}
