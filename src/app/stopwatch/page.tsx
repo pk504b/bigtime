@@ -1,7 +1,12 @@
 "use client";
 
 import Layout from "@/components/Layout";
-import { PauseIcon, PlayIcon, ResetIcon } from "@/lib/icons";
+import {
+  PauseIcon,
+  PlayIcon,
+  ResetIcon,
+  TimestampIcon,
+} from "@/lib/icons";
 import { DateTime, Duration } from "luxon";
 import { useEffect, useRef, useState } from "react";
 
@@ -12,6 +17,8 @@ export default function Page() {
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [message, setMessage] = useState(initialMessege);
+  const [timestamps, setTimestamps] = useState<Duration[]>([]);
+  const olRef = useRef<HTMLOListElement>(null);
 
   const formattedDuration = Duration.fromMillis(duration);
 
@@ -34,23 +41,56 @@ export default function Page() {
     };
   }, [isRunning, duration]);
 
+  // Scroll to bottom of timestamps list
+  useEffect(() => {
+    if (olRef.current) {
+      olRef.current.scrollTop = olRef.current.scrollHeight;
+    }
+  }, [timestamps]);
+
   function reset() {
     setDuration(0);
     setIsRunning(false);
+    setTimestamps([]);
+  }
+
+  function recordTimestamp() {
+    setTimestamps((prev) => [...prev, formattedDuration]);
   }
 
   return (
-    <Layout
-      top={message}
-      mid={<Mid formattedDuration={formattedDuration} />}
-      bottom={
-        <Bottom
-          isRunning={isRunning}
-          setIsRunning={setIsRunning}
-          reset={reset}
-        />
-      }
-    />
+    <>
+      <Layout
+        top={message}
+        mid={<Mid formattedDuration={formattedDuration} />}
+        bottom={
+          <Bottom
+            isRunning={isRunning}
+            setIsRunning={setIsRunning}
+            reset={reset}
+            recordTimestamp={recordTimestamp}
+          />
+        }
+      />
+
+      {timestamps.length > 0 && (
+        <div className="absolute top-10 right-4 text-sm dark:text-dpm">
+          <p className="mb-2 text-center">Timestamps</p>
+          <ol ref={olRef} className="max-h-40 overflow-y-scroll no-scrollbar ">
+            {timestamps.map((s, i) => (
+              <li key={i} className="list-none font-mono">
+                <span className="italic">
+                  #{(i + 1).toString().padStart(2, "0")}
+                </span>
+                <span>
+                  &nbsp;&nbsp;&nbsp;&nbsp;{s.toFormat("hh:mm:ss SSS")}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -72,10 +112,12 @@ function Bottom({
   isRunning,
   setIsRunning,
   reset,
+  recordTimestamp,
 }: {
   isRunning: boolean;
   setIsRunning: React.Dispatch<React.SetStateAction<boolean>>;
   reset: () => void;
+  recordTimestamp: () => void;
 }) {
   return (
     <div className="flex items-center justify-center gap-12">
@@ -88,6 +130,15 @@ function Bottom({
         onClick={() => setIsRunning(!isRunning)}
       >
         {isRunning ? <PauseIcon size={80} /> : <PlayIcon size={80} />}
+      </button>
+
+      <button
+        className={
+          isRunning ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+        }
+        onClick={recordTimestamp}
+      >
+        {<TimestampIcon size={40} />}
       </button>
     </div>
   );
