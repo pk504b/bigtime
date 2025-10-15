@@ -1,7 +1,7 @@
 import country from "country-list-js";
 import { cityMapping, lookupViaCity } from "city-timezones";
 import { getCountry } from "countries-and-timezones";
-import Clock from "@/components/Clock";
+import Clock from "../Clock";
 
 export default async function Page({
   params,

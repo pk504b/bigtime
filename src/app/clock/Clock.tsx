@@ -1,11 +1,8 @@
 "use client";
 
-import { Rubik_Mono_One } from "next/font/google";
 import { useEffect, useState } from "react";
 import { DateTime } from "luxon";
-import Layout from "./Layout";
-
-const rubikMono = Rubik_Mono_One({ weight: "400", subsets: ["latin"] });
+import Layout from "../../components/Layout";
 
 interface Props {
   place: string;
@@ -30,13 +27,11 @@ export default function Clock({ place, timezone }: Props) {
   if (!hasMounted) return null;
 
   return (
-    <>
-      <Layout
-        top={<Top place={place} />}
-        mid={<Mid now={now} is12Hour={is12Hour} setIs12Hour={setIs12Hour} />}
-        bottom={<Bottom now={now} />}
-      />
-    </>
+    <Layout
+      top={<Top place={place} />}
+      mid={<Mid now={now} is12Hour={is12Hour} setIs12Hour={setIs12Hour} />}
+      bottom={<Bottom now={now} />}
+    />
   );
 }
 

@@ -12,18 +12,14 @@ import {
 } from "@/lib/icons";
 import Layout from "@/components/Layout";
 
+const initialMessege = "Swipe Up/Down to Set Timer";
+
 export default function Page() {
   const [duration, setDuration] = useState(Duration.fromMillis(0));
   const [isRunning, setIsRunning] = useState(false);
   const [started, setStarted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const message = useRef<HTMLParagraphElement>(null);
-
-  const updateMessage = (text: string) => {
-    if (message.current) {
-      message.current.innerText = text;
-    }
-  };
+  const [message, setMessage] = useState(initialMessege);
 
   function update(unit: any, delta: number) {
     if (isRunning || started) return;
@@ -50,7 +46,6 @@ export default function Page() {
 
   useEffect(() => {
     if (isRunning) {
-      updateMessage("Timer Running...");
       intervalRef.current = setInterval(() => {
         setDuration((prevDur) => {
           const newDur = prevDur.minus(1000);
@@ -61,17 +56,14 @@ export default function Page() {
           return newDur;
         });
       }, 1000);
-    } else if (!isRunning && started) {
-      updateMessage("Timer Paused");
+      setMessage("Timer Running...");
+    } else {
+      clearInterval(intervalRef.current!);
+      started && setMessage("Timer Paused...");
     }
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      if (!isRunning && !started) {
-        updateMessage("Timer Ended");
-      }
+      clearInterval(intervalRef.current!);
     };
   }, [isRunning, started]);
 
@@ -79,7 +71,7 @@ export default function Page() {
     if (isRunning) return;
     setDuration(Duration.fromMillis(0));
     setStarted(false);
-    updateMessage("Swipe Up/Down to Set Timer");
+    setMessage(initialMessege);
   }
 
   function plusOne() {
@@ -93,85 +85,120 @@ export default function Page() {
     }
     setStarted(false);
     setIsRunning(false);
-    updateMessage("Timer Ended");
+    setMessage("Timer Ended");
   }
 
   return (
     <Layout
-      top={
-        <p ref={message} className="font-medium">
-          Swipe Up/Down to Set Timer
-        </p>
-      }
+      top={message}
       mid={
-        <>
-          {["hours", "minutes", "seconds"].map((unit, i) => (
-            <span key={i} className="">
-              <span className="relative group">
-                <button
-                  className={`absolute -top-0 left-1/2 -translate-x-1/2 px-6 hidden group-hover:block ${
-                    started
-                      ? "cursor-not-allowed opacity-50"
-                      : "cursor-ns-resize"
-                  }`}
-                  onClick={() => update(unit, 1)}
-                >
-                  <CaretUpIcon />
-                </button>
-                <span
-                  className={
-                    started ? "cursor-not-allowed" : "cursor-ns-resize"
-                  }
-                  onWheel={(e) => updateOnWheel(e, unit)}
-                >
-                  {duration.toFormat("hh:mm:ss").split(":")[i]}
-                </span>
-                <button
-                  className={`absolute -bottom-0 left-1/2 -translate-x-1/2 px-6 hidden group-hover:block ${
-                    started
-                      ? "cursor-not-allowed opacity-50"
-                      : "cursor-ns-resize"
-                  }`}
-                  onClick={() => update(unit, -1)}
-                >
-                  <CaretDownIcon />
-                </button>
-              </span>
-              {unit !== "seconds" && <span>:</span>}
-            </span>
-          ))}
-        </>
+        <Mid
+          duration={duration}
+          update={update}
+          updateOnWheel={updateOnWheel}
+          started={started}
+        />
       }
       bottom={
-        <div className="flex items-center justify-center gap-12">
-          {/* RESET */}
-          <button
-            className={
-              isRunning ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-            }
-            onClick={reset}
-          >
-            <ResetIcon size={40} />
-          </button>
-
-          {/* PLAY/PAUSE */}
-          <button
-            className={
-              duration.as("seconds") <= 0
-                ? "cursor-not-allowed opacity-50"
-                : "cursor-pointer"
-            }
-            onClick={toggleTimer}
-          >
-            {isRunning ? <PauseIcon size={80} /> : <PlayIcon size={80} />}
-          </button>
-
-          {/* +1 MINUTE */}
-          <button className="cursor-pointer" onClick={plusOne}>
-            <PlusOneIcon size={40} />
-          </button>
-        </div>
+        <Bottom
+          isRunning={isRunning}
+          reset={reset}
+          duration={duration}
+          toggleTimer={toggleTimer}
+          plusOne={plusOne}
+        />
       }
     />
+  );
+}
+
+function Mid({
+  duration,
+  update,
+  updateOnWheel,
+  started,
+}: {
+  duration: Duration;
+  update: (unit: any, delta: number) => void;
+  updateOnWheel: (e: React.WheelEvent<HTMLSpanElement>, unit: any) => void;
+  started: boolean;
+}) {
+  return (
+    <>
+      {["hours", "minutes", "seconds"].map((unit, i) => (
+        <span key={i} className="">
+          <span className="relative group">
+            <button
+              className={`absolute -top-0 left-1/2 -translate-x-1/2 px-6 hidden group-hover:block ${
+                started ? "cursor-not-allowed opacity-50" : "cursor-ns-resize"
+              }`}
+              onClick={() => update(unit, 1)}
+            >
+              <CaretUpIcon />
+            </button>
+            <span
+              className={started ? "cursor-not-allowed" : "cursor-ns-resize"}
+              onWheel={(e) => updateOnWheel(e, unit)}
+            >
+              {duration.toFormat("hh:mm:ss").split(":")[i]}
+            </span>
+            <button
+              className={`absolute -bottom-0 left-1/2 -translate-x-1/2 px-6 hidden group-hover:block ${
+                started ? "cursor-not-allowed opacity-50" : "cursor-ns-resize"
+              }`}
+              onClick={() => update(unit, -1)}
+            >
+              <CaretDownIcon />
+            </button>
+          </span>
+          {unit !== "seconds" && <span>:</span>}
+        </span>
+      ))}
+    </>
+  );
+}
+
+function Bottom({
+  isRunning,
+  reset,
+  duration,
+  toggleTimer,
+  plusOne,
+}: {
+  isRunning: boolean;
+  reset: () => void;
+  duration: Duration;
+  toggleTimer: () => void;
+  plusOne: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-center gap-12">
+      {/* RESET */}
+      <button
+        className={
+          isRunning ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+        }
+        onClick={reset}
+      >
+        <ResetIcon size={40} />
+      </button>
+
+      {/* PLAY/PAUSE */}
+      <button
+        className={
+          duration.as("seconds") <= 0
+            ? "cursor-not-allowed opacity-50"
+            : "cursor-pointer"
+        }
+        onClick={toggleTimer}
+      >
+        {isRunning ? <PauseIcon size={80} /> : <PlayIcon size={80} />}
+      </button>
+
+      {/* +1 MINUTE */}
+      <button className="cursor-pointer" onClick={plusOne}>
+        <PlusOneIcon size={40} />
+      </button>
+    </div>
   );
 }

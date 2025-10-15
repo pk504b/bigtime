@@ -1,4 +1,4 @@
-import Clock from "@/components/Clock";
+import Clock from "./Clock";
 
 export default async function Page() {
   const res = await fetch("https://free.freeipapi.com/api/json");
