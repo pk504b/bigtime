@@ -2,7 +2,7 @@
 
 import { Rubik_Mono_One } from "next/font/google";
 import { useEffect, useState } from "react";
-import { DateTime } from 'luxon'
+import { DateTime } from "luxon";
 import Layout from "./Layout";
 
 const rubikMono = Rubik_Mono_One({ weight: "400", subsets: ["latin"] });
@@ -32,32 +32,51 @@ export default function Clock({ place, timezone }: Props) {
   return (
     <>
       <Layout
-        top={
-          <>
-            Time in <span className="font-semibold">{place}</span> now:
-          </>
-        }
-        mid={
-          is12Hour ? (
-            <>
-              <span className="">
-                {now.toFormat("h:mm:ss")}
-              </span>
-              <span className="text-4xl">
-                {now.toFormat("a")}
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="">
-                {now.toFormat("HH:mm:ss")}
-              </span>
-            </>
-          )
-        }
-        bottom={<div className="text-2xl md:text-3xl tracking-widest">{now.toFormat("EEEE, d MMMM, yyyy")}</div>}
-        onClick={() => setIs12Hour(!is12Hour)}
+        top={<Top place={place} />}
+        mid={<Mid now={now} is12Hour={is12Hour} setIs12Hour={setIs12Hour} />}
+        bottom={<Bottom now={now} />}
       />
     </>
+  );
+}
+
+function Top({ place }: { place: string }) {
+  return (
+    <>
+      Time in <span className="font-semibold">{place}</span> now:
+    </>
+  );
+}
+
+function Mid({
+  now,
+  is12Hour,
+  setIs12Hour,
+}: {
+  now: DateTime;
+  is12Hour: boolean;
+  setIs12Hour: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  return (
+    <div className="cursor-pointer" onClick={() => setIs12Hour(!is12Hour)}>
+      {is12Hour ? (
+        <>
+          <span className="">{now.toFormat("h:mm:ss")}</span>
+          <span className="text-4xl">{now.toFormat("a")}</span>
+        </>
+      ) : (
+        <>
+          <span className="">{now.toFormat("HH:mm:ss")}</span>
+        </>
+      )}
+    </div>
+  );
+}
+
+function Bottom({ now }: { now: DateTime }) {
+  return (
+    <div className="text-2xl md:text-3xl tracking-widest">
+      {now.toFormat("EEEE, d MMMM, yyyy")}
+    </div>
   );
 }

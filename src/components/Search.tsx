@@ -1,10 +1,7 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import country from "country-list-js";
 import { cityMapping } from "city-timezones";
 import { SearchIcon } from "@/lib/icons";
-import { usePathname } from "next/navigation";
 import { useClickOutside } from "@/utils/useClickOutside";
 
 interface Result {
@@ -13,9 +10,8 @@ interface Result {
 }
 
 export default function Search() {
-  const pathname = usePathname();
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const searchDivRef = useRef<HTMLDivElement>(null); // Fixed HTMLElement typing
+  const searchDivRef = useRef<HTMLDivElement>(null);
 
   const [showSearch, setShowSearch] = useState(false);
   const [query, setQuery] = useState("");
@@ -31,7 +27,7 @@ export default function Search() {
     }
   }, [showSearch]);
 
-  useEffect(() => {
+  const filteredResults = useMemo(() => {
     if (!query || query.length < 2) {
       setIso2Result(null);
       setCountryResults([]);
@@ -40,8 +36,8 @@ export default function Search() {
     }
 
     const q = query.toLowerCase();
-
     const isoResult = country.findByIso2(q.toUpperCase());
+
     if (isoResult?.code?.iso2) {
       setIso2Result({
         displayName: `${isoResult.name} (${isoResult.code.iso2})`,
@@ -61,7 +57,6 @@ export default function Search() {
         })`,
         slug: c.replace(/\s+/g, "-"),
       }));
-    setCountryResults(countryMatches);
 
     const cityMatches = cityMapping
       .filter((c) => c.city.toLowerCase().startsWith(q))
@@ -70,46 +65,48 @@ export default function Search() {
         displayName: `${c.city}`,
         slug: c.city.replace(/\s+/g, "-"),
       }));
+
+    setCountryResults(countryMatches);
     setCityResults(cityMatches);
+
   }, [query]);
 
   return (
-    <>
-      {pathname.includes("/clock") && (
-        <div className="flex items-center">
-          {showSearch && (
-            <div ref={searchDivRef} className="relative">
-              <input
-                type="text"
-                ref={searchInputRef}
-                placeholder="Search timezones..."
-                className="focus:outline-none border-none bg-transparent"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-
-              <ul className="absolute py-2" role="listbox" tabIndex={0}>
-                {[iso2Result, ...countryResults, ...cityResults]
-                  .filter(Boolean)
-                  .map((r, i) => (
-                    <li key={i} className="py-1 my-1">
-                      <a href={`/clock/${r?.slug}`}>{r?.displayName}</a>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          )}
-          <button
-            onClick={() => {
-              if (!showSearch) {
-                setShowSearch(true);
-              }
-            }}
+    <div className="flex items-center">
+      {showSearch && (
+        <div ref={searchDivRef} className="relative">
+          <input
+            type="text"
+            ref={searchInputRef}
+            placeholder="Search timezones..."
+            className="focus:outline-none border-none bg-transparent"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search for countries or cities"
+          />
+          <ul
+            className="absolute py-2"
+            role="listbox"
+            tabIndex={0}
+            aria-expanded={showSearch}
           >
-            <SearchIcon />
-          </button>
+            {[iso2Result, ...countryResults, ...cityResults]
+              .filter(Boolean)
+              .map((r, i) => (
+                <li key={i} className="py-1 my-1" role="option">
+                  <a href={`/clock/${r?.slug}`}>{r?.displayName}</a>
+                </li>
+              ))}
+          </ul>
         </div>
       )}
-    </>
+      <button
+        className="cursor-pointer"
+        onClick={() => setShowSearch(true)}
+        aria-label="search timezones"
+      >
+        <SearchIcon />
+      </button>
+    </div>
   );
 }

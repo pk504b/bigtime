@@ -1,4 +1,9 @@
-import { ClockIcon, PomodoroIcon, StopwatchIcon, TimerIcon } from "../lib/icons";
+import { 
+  ClockIcon, 
+  PomodoroIcon, 
+  StopwatchIcon, 
+  TimerIcon } 
+from "../lib/icons";
 import NavButton from "./NavButton";
 
 export default function Navigation() {

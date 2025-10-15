@@ -14,23 +14,30 @@ export default async function Page({
   let name = "";
   let timezone = "";
 
-  const countryResult = country.findByName(deslug);
-  if (countryResult) {
-    countryResult.timezones = getCountry(countryResult.code.iso2).timezones;
-    if (countryResult.timezones.length === 1) {
-      name = `${countryResult.name}`;
-      timezone = countryResult.timezones[0];
-    } else {
-      const capital = countryResult.capital;
-      name = `${capital}, ${countryResult.name}`;
-      timezone = cityMapping.find(
-        (c) => c.city.includes(capital) || capital.includes(c.city)
-      )?.timezone!;
+  const cntry = country.findByName(deslug);
+
+  if (cntry) {
+    const { name: countryName, code, capital } = cntry;
+    const { iso2 } = code;
+
+    cntry.timezones = getCountry(iso2)?.timezones || [];
+
+    if (cntry.timezones.length === 1) {
+      name = countryName;
+      timezone = cntry.timezones[0];
+    } else if (capital) {
+      name = `${capital}, ${countryName}`;
+      timezone =
+        cityMapping.find(
+          (c) => c.city.includes(capital) || capital.includes(c.city)
+        )?.timezone ?? ""; // Fallback to null if not found
     }
   } else {
-    const city = lookupViaCity(deslug)[0];
-    name = `${city.city}, ${city.country}`;
-    timezone = city.timezone;
+    const [city] = lookupViaCity(deslug) || [];
+    if (city) {
+      name = `${city.city}, ${city.country}`;
+      timezone = city.timezone;
+    }
   }
 
   if (!name || !timezone) return;

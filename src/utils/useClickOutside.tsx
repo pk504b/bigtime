@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 // Type for the handler function (can pass the event as parameter)
 type Handler = (event: MouseEvent | TouchEvent) => void;
 
-export function useClickOutside<T extends HTMLElement>(
+export function useClickOutside<T extends HTMLDivElement|null>(
   ref: React.RefObject<T>,
   handler: Handler
 ) {
