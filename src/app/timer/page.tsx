@@ -59,7 +59,7 @@ export default function Page() {
       setMessage("Timer Running...");
     } else {
       clearInterval(intervalRef.current!);
-      started && setMessage("Timer Paused...");
+      started && setMessage("Timer Paused");
     }
 
     return () => {
