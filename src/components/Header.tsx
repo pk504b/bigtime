@@ -22,8 +22,8 @@ export default function Header() {
           {pathname.includes("/clock") && <Search />}
 
           <div className="flex items-center gap-4">
-            <button className="cursor-pointer">{<BellIcon />}</button>
-            <button className="cursor-pointer">{<CoffeeIcon />}</button>
+            {/* <button className="cursor-pointer">{<BellIcon />}</button> */}
+            <a href="https://ko-fi.com/pk504b">{<CoffeeIcon />}</a>
           </div>
         </div>
       </div>
