@@ -15,7 +15,7 @@ export default function NavButton({ href, name, icon }: Props) {
     <a
       href={href}
       className={`flex-1 flex flex-col items-center py-2 rounded-md ${
-        pathname.includes(href) ? "bg-lightbrigtgreen text-midnight dark:bg-hintofyellow" : ""
+        pathname.startsWith(href) ? "bg-lightbrigtgreen text-midnight dark:bg-hintofyellow" : ""
       }`}
     >
       <span className="text-xl">{icon}</span>

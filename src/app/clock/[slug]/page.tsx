@@ -2,6 +2,7 @@ import country from "country-list-js";
 import { cityMapping, lookupViaCity } from "city-timezones";
 import { getCountry } from "countries-and-timezones";
 import Clock from "../Clock";
+import { notFound } from 'next/navigation';
 
 export default async function Page({
   params,
@@ -30,7 +31,7 @@ export default async function Page({
       timezone =
         cityMapping.find(
           (c) => c.city.includes(capital) || capital.includes(c.city)
-        )?.timezone ?? ""; // Fallback to null if not found
+        )?.timezone ?? "";
     }
   } else {
     const [city] = lookupViaCity(deslug) || [];
@@ -40,7 +41,7 @@ export default async function Page({
     }
   }
 
-  if (!name || !timezone) return;
+  if (!name || !timezone) return notFound();
 
   return (
     <>
