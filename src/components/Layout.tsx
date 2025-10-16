@@ -12,7 +12,7 @@ interface Props {
 export default function Layout({ top, mid, bottom, onClick }: Props) {
   return (
     <>
-      <div className="h-full flex flex-col container mx-auto text-center justify-center gap-y-8">
+      <div className="h-full flex flex-col container mx-auto text-center justify-center gap-y-20 md:gap-y-8">
         <div className="">{top}</div>
 
         <div

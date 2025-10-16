@@ -8,7 +8,7 @@ import NavButton from "./NavButton";
 
 export default function Navigation() {
   return (
-    <nav className="bg-midnight">
+    <nav className="bg-midnight text-hintofyellow dark:bg-lightbrigtgreen dark:text-midnight">
       <div className="container mx-auto flex">
         <NavButton href="/clock" name="Clock" icon={<ClockIcon />} />
         <NavButton href="/timer" name="Timer" icon={<TimerIcon />} />

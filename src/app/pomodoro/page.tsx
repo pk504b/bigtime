@@ -69,7 +69,7 @@ export default function Page() {
       top={message}
       mid={
         <>
-          <span className="text-[2vw] italic">#{cycleCount} </span>
+          <span className="text-[4vw] lg:text-[2vw] italic">#{cycleCount} </span>
           <span>{duration.toFormat("mm:ss")}</span>
         </>
       }
