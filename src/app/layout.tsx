@@ -6,7 +6,10 @@ import { Rubik } from "next/font/google";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bigtime.pw"),
-  title: "Bigtime",
+  title: {
+    default: "Bigtime",
+    template: "%s • Bigtime",
+  },
   description: "The big simple clock",
   keywords: ["clock", "world clock", "timer", "stopwatch", "pomodoro", "time", "tracking"],
   openGraph: {
