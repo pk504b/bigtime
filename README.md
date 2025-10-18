@@ -14,10 +14,10 @@ The big simple clock
 - Search timezones by ISO, Country, City
 - Easily set timer by scrolling
 - Record timestamps in stopwatch
-- Pomodoro with 25 + 5 min cycles
+- Pomodoro with 25 + 5 min cycle
+- The times are displayed in title bar
 
 ### Todo
 - [ ] sound and notification
 - [ ] state management
-- [ ] dynamic metadata (time in title bar)
 - [ ] theme toggle
