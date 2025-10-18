@@ -27,7 +27,9 @@ export default function Clock({ place, timezone }: Props) {
   // UPDATE TITLE
   useEffect(() => {
     if (now) {
-      document.title = is12Hour ? `${now.toFormat("h:mm a")} in ${place}` : `${now.toFormat("HH:mm")} in ${place}`;
+      document.title = is12Hour
+        ? `${now.toFormat("h:mm a")} in ${place}`
+        : `${now.toFormat("HH:mm")} in ${place}`;
     } else {
       document.title = "Timer";
     }
