@@ -23,7 +23,7 @@ export default function Header() {
 
           <div className="flex items-center gap-4">
             {/* <button className="cursor-pointer">{<BellIcon />}</button> */}
-            <a href="https://ko-fi.com/pk504b">{<CoffeeIcon />}</a>
+            <a href="https://ko-fi.com/pk504b" target="_blank">{<CoffeeIcon />}</a>
           </div>
         </div>
       </div>
