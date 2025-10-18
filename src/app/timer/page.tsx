@@ -67,6 +67,19 @@ export default function Page() {
     };
   }, [isRunning, started]);
 
+  // UPDATE TITLE
+  useEffect(() => {
+    if (isRunning) {
+      document.title = `Timer ${
+        duration.hours > 0
+          ? duration.toFormat("hh:mm:ss")
+          : duration.toFormat("mm:ss")
+      }`;
+    } else {
+      document.title = "Timer";
+    }
+  }, [duration, isRunning]);
+
   function reset() {
     if (isRunning) return;
     setDuration(Duration.fromMillis(0));

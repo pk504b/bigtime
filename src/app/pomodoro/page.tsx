@@ -52,6 +52,17 @@ export default function Page() {
     }
   }, [duration, isBreak]);
 
+  // UPDATE TITLE
+  useEffect(() => {
+    if (isRunning) {
+      document.title = isBreak
+        ? `Break ${duration.toFormat("mm:ss")}`
+        : `Focus ${duration.toFormat("mm:ss")}`;
+    } else {
+      document.title = "Pomodoro";
+    }
+  }, [duration, isRunning, isBreak]);
+
   const startPauseTimer = () => {
     setIsRunning((prev) => !prev);
   };
@@ -69,7 +80,9 @@ export default function Page() {
       top={message}
       mid={
         <>
-          <span className="text-[4vw] lg:text-[2vw] italic">#{cycleCount} </span>
+          <span className="text-[4vw] lg:text-[2vw] italic">
+            #{cycleCount}{" "}
+          </span>
           <span>{duration.toFormat("mm:ss")}</span>
         </>
       }

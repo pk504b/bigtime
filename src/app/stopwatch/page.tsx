@@ -39,6 +39,19 @@ export default function Page() {
     };
   }, [isRunning, duration]);
 
+  // UPDATE TITLE
+  useEffect(() => {
+    if (isRunning) {
+      document.title = `Stopwatch ${
+        duration.hours > 0
+          ? duration.toFormat("hh:mm:ss")
+          : duration.toFormat("mm:ss")
+      }`;
+    } else {
+      document.title = "Stopwatch";
+    }
+  }, [duration, isRunning]);
+
   // Scroll to bottom of timestamps list
   useEffect(() => {
     if (olRef.current) {
