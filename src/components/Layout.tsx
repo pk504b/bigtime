@@ -22,7 +22,7 @@ export default function Layout({ top, mid, bottom, onClick }: Props) {
           {mid}
         </div>
 
-        <div className="">{bottom}</div>
+        <div className="min-h-20">{bottom}</div>
       </div>
     </>
   );
