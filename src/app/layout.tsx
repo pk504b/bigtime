@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import { Rubik } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bigtime.pw"),
