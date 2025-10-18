@@ -7,7 +7,7 @@ var country_names = country.names();
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://bigtime.pw'
 
-  const sitemap = [
+  return [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -20,18 +20,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'always',
       priority: 0.9,
     },
-    ...country_names.map((cntry) => ({
-      url: `${baseUrl}/clock/${cntry.replace(/\s+/g, "-")}`,
-      lastModified: new Date(),
-      changeFrequency: 'always',
-      priority: 0.8,
-    })),
-    ...cityMapping.map((city) => ({
-      url: `${baseUrl}/clock/${city.city.replace(/\s+/g, "-")}`,
-      lastModified: new Date(),
-      changeFrequency: 'always',
-      priority: 0.8,
-    })),
     {
       url: `${baseUrl}/timer`,
       lastModified: new Date(),
@@ -50,7 +38,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'never',
       priority: 0.9,
     },
+    ...country_names.map((cntry) => ({
+      url: `${baseUrl}/clock/${cntry.replace(/\s+/g, "-")}`,
+      lastModified: new Date(),
+      changeFrequency: 'always' as const,
+      priority: 0.8,
+    })),
+    ...cityMapping.map((city) => ({
+      url: `${baseUrl}/clock/${city.city.replace(/\s+/g, "-")}`,
+      lastModified: new Date(),
+      changeFrequency: 'always' as const,
+      priority: 0.8,
+    })),
   ]
-  
-  return sitemap 
 }
