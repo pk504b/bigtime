@@ -38,6 +38,25 @@ export default function Page() {
     update(unit, delta);
   }
 
+  function updateOnTouch(e: React.TouchEvent<HTMLSpanElement>, unit: any) {
+    const touchMoveY = e.touches[0].clientY;
+    let delta = 0;
+
+    if (e.type === "touchstart") {
+      e.currentTarget.dataset.touchStartY = touchMoveY.toString();
+    } else if (e.type === "touchmove") {
+      const touchStartY = parseFloat(
+        e.currentTarget.dataset.touchStartY || "0"
+      );
+      delta = touchMoveY - touchStartY;
+
+      if (Math.abs(delta) > 10) {
+        update(unit, delta > 0 ? -1 : 1);
+        e.currentTarget.dataset.touchStartY = touchMoveY.toString();
+      }
+    }
+  }
+
   function toggleTimer() {
     if (duration.as("seconds") <= 0) return;
     setStarted(true);
@@ -109,6 +128,7 @@ export default function Page() {
           duration={duration}
           update={update}
           updateOnWheel={updateOnWheel}
+          updateOnTouch={updateOnTouch}
           started={started}
         />
       }
@@ -129,11 +149,13 @@ function Mid({
   duration,
   update,
   updateOnWheel,
+  updateOnTouch,
   started,
 }: {
   duration: Duration;
   update: (unit: any, delta: number) => void;
   updateOnWheel: (e: React.WheelEvent<HTMLSpanElement>, unit: any) => void;
+  updateOnTouch: (e: React.TouchEvent<HTMLSpanElement>, unit: any) => void;
   started: boolean;
 }) {
   return (
@@ -152,6 +174,8 @@ function Mid({
             <span
               className={started ? "cursor-not-allowed" : "cursor-ns-resize"}
               onWheel={(e) => updateOnWheel(e, unit)}
+              onTouchStart={(e) => updateOnTouch(e, unit)}
+              onTouchMove={(e) => updateOnTouch(e, unit)}
             >
               {duration.toFormat("hh:mm:ss").split(":")[i]}
             </span>
