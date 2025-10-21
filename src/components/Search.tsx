@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, useMemo } from "react";
 import country from "country-list-js";
 import { cityMapping } from "city-timezones";
@@ -18,6 +20,11 @@ export default function Search() {
   const [iso2Result, setIso2Result] = useState<Result | null>(null);
   const [countryResults, setCountryResults] = useState<Result[]>([]);
   const [cityResults, setCityResults] = useState<Result[]>([]);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+  const searchResults = [iso2Result, ...countryResults, ...cityResults].filter(
+    Boolean
+  );
 
   useClickOutside(searchDivRef, () => setShowSearch(false));
 
@@ -68,21 +75,41 @@ export default function Search() {
 
     setCountryResults(countryMatches);
     setCityResults(cityMatches);
-
   }, [query]);
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev + 1) % searchResults.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightedIndex((prev) =>
+        prev === 0 ? searchResults.length - 1 : prev - 1
+      );
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const selected = searchResults[highlightedIndex];
+      if (selected) {
+        window.location.href = `/clock/${selected.slug}`;
+      }
+    }
+  }
 
   return (
     <div className="flex items-center">
       {showSearch && (
         <div ref={searchDivRef} className="relative">
           <input
-            type="text"
             ref={searchInputRef}
+            type="text"
             placeholder="Search timezones..."
             className="focus:outline-none border-none bg-transparent"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            aria-label="Search for countries or cities"
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setHighlightedIndex(-1);
+            }}
+            onKeyDown={handleKeyDown}
           />
           <ul
             className="absolute py-2"
@@ -90,13 +117,20 @@ export default function Search() {
             tabIndex={0}
             aria-expanded={showSearch}
           >
-            {[iso2Result, ...countryResults, ...cityResults]
-              .filter(Boolean)
-              .map((r, i) => (
-                <li key={i} className="py-1 my-1" role="option">
-                  <a href={`/clock/${r?.slug}`}>{r?.displayName}</a>
-                </li>
-              ))}
+            {searchResults.map((r, i) => (
+              <li
+                key={i}
+                className={`py-1 my-1 ${
+                  i === highlightedIndex
+                    ? "text-lightbrigtgreen dark:text-hintofyellow"
+                    : ""
+                }`}
+                role="option"
+                aria-selected={i === highlightedIndex}
+              >
+                <a href={`/clock/${r?.slug}`}>{r?.displayName}</a>
+              </li>
+            ))}
           </ul>
         </div>
       )}
