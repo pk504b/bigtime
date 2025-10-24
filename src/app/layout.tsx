@@ -6,7 +6,7 @@ import { Rubik } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bigtime.pw"),
+  metadataBase: new URL("https://www.bigtime.pw"),
   title: "Bigtime",
   description: "The big simple clock",
   keywords: ["clock", "world clock", "timer", "stopwatch", "pomodoro", "time", "tracking"],
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     siteName: "Bigtime",
     images: [
       {
-        url: "https://bigtime.pw/og-card.png",
+        url: "https://www.bigtime.pw/og-card.png",
         width: 1200,
         height: 630,
         alt: "Bigtime",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     description: "The big simple clock",
     images: [
       {
-        url: "https://bigtime.pw/og-card.png",
+        url: "https://www.bigtime.pw/og-card.png",
         width: 1200,
         height: 630,
         alt: "Bigtime",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://bigtime.pw",
+    canonical: "https://www.bigtime.pw",
   },
 };
 
