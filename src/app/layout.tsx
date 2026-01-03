@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-dvh">
       <head>
         <meta name="apple-mobile-web-app-title" content="Bigtime" />
       </head>

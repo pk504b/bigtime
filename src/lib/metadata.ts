@@ -13,7 +13,7 @@ export const baseMetadata: Metadata = {
     siteName: "Bigtime",
     images: [
       {
-        url: "https://www.bigtime.pw/og-card.png",
+        url: "https://www.bigtime.pw/social-preview.png",
         width: 1200,
         height: 630,
         alt: "Bigtime",
@@ -26,7 +26,7 @@ export const baseMetadata: Metadata = {
     description: "The big simple clock",
     images: [
       {
-        url: "https://www.bigtime.pw/og-card.png",
+        url: "https://www.bigtime.pw/social-preview.png",
         width: 1200,
         height: 630,
         alt: "Bigtime",

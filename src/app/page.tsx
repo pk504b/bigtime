@@ -1,9 +1,5 @@
-import { baseMetadata } from "@/lib/metadata";
-
-export const metadata = baseMetadata;
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  return (
-    <meta httpEquiv="refresh" content="0; url=/clock" />
-  );
+  redirect("/clock");
 }
