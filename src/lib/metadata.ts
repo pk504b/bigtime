@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const baseMetadata: Metadata = {
-  metadataBase: new URL("https://www.bigtime.pw"),
+  metadataBase: new URL("https://bigtime.pw"),
   title: "Bigtime",
   description: "The big simple clock",
   keywords: ["clock", "world clock", "timer", "stopwatch", "pomodoro", "time", "tracking"],
@@ -13,7 +13,7 @@ export const baseMetadata: Metadata = {
     siteName: "Bigtime",
     images: [
       {
-        url: "https://www.bigtime.pw/social-preview.png",
+        url: "https://bigtime.pw/social-preview.png",
         width: 1200,
         height: 630,
         alt: "Bigtime",
@@ -26,7 +26,7 @@ export const baseMetadata: Metadata = {
     description: "The big simple clock",
     images: [
       {
-        url: "https://www.bigtime.pw/social-preview.png",
+        url: "https://bigtime.pw/social-preview.png",
         width: 1200,
         height: 630,
         alt: "Bigtime",
@@ -45,6 +45,6 @@ export const baseMetadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://www.bigtime.pw",
+    canonical: "https://bigtime.pw",
   },
 };
