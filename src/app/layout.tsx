@@ -5,9 +5,9 @@ import { Rubik } from "next/font/google";
 import { baseMetadata } from "@/lib/metadata";
 import { GoogleAnalytics } from '@next/third-parties/google'
 
-export const metadata = baseMetadata;
-
 const rubik = Rubik({ subsets: ["latin"] });
+
+export const metadata = baseMetadata;
 
 export default function RootLayout({
   children,
