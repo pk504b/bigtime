@@ -165,7 +165,7 @@ function Mid({
           <span className="relative group">
             <button
               className={`absolute -top-0 left-1/2 -translate-x-1/2 px-6 group-hover:block lg:hidden ${
-                started ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+                started ? "hidden" : "cursor-pointer"
               }`}
               onClick={() => update(unit, 1)}
             >
@@ -181,7 +181,7 @@ function Mid({
             </span>
             <button
               className={`absolute -bottom-0 left-1/2 -translate-x-1/2 px-6 group-hover:block lg:hidden ${
-                started ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+                started ? "hidden" : "cursor-pointer"
               }`}
               onClick={() => update(unit, -1)}
             >
