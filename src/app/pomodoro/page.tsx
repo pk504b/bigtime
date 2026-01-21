@@ -7,8 +7,8 @@ import Layout from "@/components/Layout";
 import { PauseIcon, PlayIcon, ResetIcon } from "@/lib/icons";
 
 const INITIAL_MSG = "Hit Play to Start Pomodoro Cycle";
-const FOCUS_TIME = { seconds: 10 };
-const BREAK_TIME = { seconds: 5 };
+const FOCUS_TIME = { minutes: 25 };
+const BREAK_TIME = { minutes: 5 };
 
 export default function Page() {
   const router = useRouter();
