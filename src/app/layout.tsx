@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import { Rubik } from "next/font/google";
 import { baseMetadata } from "@/lib/metadata";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-dvh">
+    <html lang="en" className="h-svh">
       <head>
         <meta name="apple-mobile-web-app-title" content="Bigtime" />
       </head>
