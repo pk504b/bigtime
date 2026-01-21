@@ -144,6 +144,13 @@ export default function Page() {
       const now = audioCtx.currentTime;
       playTone(880, now, 0.1);
       playTone(880, now + 0.2, 0.1);
+
+      // Clean up the context after beeps finish
+      setTimeout(() => {
+        if (audioCtx.state !== "closed") {
+          audioCtx.close();
+        }
+      }, 500);
     } catch (error) {
       console.error("Failed to play notification sound:", error);
     }
@@ -164,16 +171,23 @@ export default function Page() {
     playBeep();
 
     if ("Notification" in window && Notification.permission === "granted") {
-      const notification = new Notification("Bigtime", {
-        body: "Timer Finished!",
-        icon: "/favicon.ico",
-        silent: true,
-      });
-      notification.onclick = (e) => {
-        e.preventDefault();
-        window.focus();
-        router.push("/timer");
-      };
+      try {
+        const notification = new Notification("Bigtime", {
+          body: "Timer Finished!",
+          icon: "/favicon.ico",
+          silent: true,
+        });
+        notification.onclick = (e) => {
+          e.preventDefault();
+          window.focus();
+          router.push("/timer");
+        };
+      } catch (err) {
+        console.warn(
+          "Standard Notification API failed, likely on mobile. Error:",
+          err,
+        );
+      }
     }
   }
 

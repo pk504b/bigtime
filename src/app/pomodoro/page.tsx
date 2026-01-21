@@ -49,6 +49,13 @@ export default function Page() {
       const now = audioCtx.currentTime;
       playTone(880, now, 0.1);
       playTone(880, now + 0.2, 0.1);
+
+      // Clean up the context after beeps finish
+      setTimeout(() => {
+        if (audioCtx.state !== "closed") {
+          audioCtx.close();
+        }
+      }, 500);
     } catch (error) {
       console.error("Failed to play notification sound:", error);
     }
@@ -59,7 +66,10 @@ export default function Page() {
     body: string,
     onAction?: () => void,
   ) {
-    if ("Notification" in window && Notification.permission === "granted") {
+    if (!("Notification" in window) || Notification.permission !== "granted")
+      return;
+
+    try {
       const notification = new Notification(title, {
         body,
         icon: "/favicon.ico",
@@ -71,6 +81,11 @@ export default function Page() {
         router.push("/pomodoro");
         if (onAction) onAction();
       };
+    } catch (err) {
+      console.warn(
+        "Standard Notification API failed, likely on mobile. Error:",
+        err,
+      );
     }
   }
 
@@ -88,8 +103,8 @@ export default function Page() {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (!message.includes("Ended")) {
         isBreak
-          ? duration.as("seconds") !== 5 && setMessage("Break Paused")
-          : duration.as("seconds") !== 10 && setMessage("Focus Session Paused");
+          ? duration.as("minutes") !== 5 && setMessage("Break Paused")
+          : duration.as("minutes") !== 25 && setMessage("Focus Session Paused");
       }
     }
 
