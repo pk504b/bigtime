@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Search from "./Search";
 import { BellIcon, CoffeeIcon, GithubIcon } from "@/lib/icons";
@@ -7,6 +7,21 @@ import Link from "next/link";
 
 export default function Header() {
   const pathname = usePathname();
+  const [permission, setPermission] =
+    useState<NotificationPermission>("default");
+
+  useEffect(() => {
+    if ("Notification" in window) {
+      setPermission(Notification.permission);
+    }
+  }, []);
+
+  const requestPermission = async () => {
+    if ("Notification" in window) {
+      const result = await Notification.requestPermission();
+      setPermission(result);
+    }
+  };
 
   return (
     <header className="">
@@ -23,9 +38,21 @@ export default function Header() {
           {pathname.includes("/clock") && <Search />}
 
           <div className="flex items-center gap-4">
-            {/* <button className="cursor-pointer">{<BellIcon />}</button> */}
-            <a href="https://github.com/pk504b/bigtime" target="_blank">{<GithubIcon />}</a>
-            <a href="https://ko-fi.com/pk504b" target="_blank">{<CoffeeIcon />}</a>
+            {permission === "default" && (
+              <button
+                className="cursor-pointer hover:text-lightbrigtgreen transition-colors"
+                onClick={requestPermission}
+                title="Enable Notifications (for Timer and Pomodoro alerts)"
+              >
+                <BellIcon />
+              </button>
+            )}
+            <a href="https://github.com/pk504b/bigtime" target="_blank">
+              {<GithubIcon />}
+            </a>
+            <a href="https://ko-fi.com/pk504b" target="_blank">
+              {<CoffeeIcon />}
+            </a>
           </div>
         </div>
       </div>

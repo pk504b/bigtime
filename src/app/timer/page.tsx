@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Duration } from "luxon";
 import {
   CaretDownIcon,
@@ -15,6 +16,7 @@ import Layout from "@/components/Layout";
 const INITIAL_MSG = "Swipe Up/Down to Set Timer";
 
 export default function Page() {
+  const router = useRouter();
   const [duration, setDuration] = useState(Duration.fromMillis(0));
   const [isRunning, setIsRunning] = useState(false);
   const [started, setStarted] = useState(false);
@@ -68,23 +70,25 @@ export default function Page() {
       intervalRef.current = setInterval(() => {
         setDuration((prevDur) => {
           const newDur = prevDur.minus(1000);
-          if (newDur.as("seconds") <= 0) {
-            endTimer();
-            return prevDur;
-          }
-          return newDur;
+          return newDur.as("seconds") <= 0 ? Duration.fromMillis(0) : newDur;
         });
       }, 1000);
       setMessage("Timer Running...");
     } else {
-      clearInterval(intervalRef.current!);
+      if (intervalRef.current) clearInterval(intervalRef.current);
       started && setMessage("Timer Paused");
     }
 
     return () => {
-      clearInterval(intervalRef.current!);
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [isRunning, started]);
+
+  useEffect(() => {
+    if (isRunning && duration.as("seconds") <= 0) {
+      endTimer();
+    }
+  }, [duration, isRunning]);
 
   // UPDATE TITLE
   useEffect(() => {
@@ -110,14 +114,67 @@ export default function Page() {
     setDuration((prevDur) => prevDur.plus({ minutes: 1 }));
   }
 
+  function playBeep() {
+    try {
+      const AudioContextClass =
+        window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContextClass) return;
+
+      const audioCtx = new AudioContextClass();
+
+      const playTone = (freq: number, startTime: number, duration: number) => {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(freq, startTime);
+
+        gainNode.gain.setValueAtTime(0, startTime);
+        gainNode.gain.linearRampToValueAtTime(0.1, startTime + 0.01);
+        gainNode.gain.linearRampToValueAtTime(0, startTime + duration);
+
+        oscillator.start(startTime);
+        oscillator.stop(startTime + duration);
+      };
+
+      // Play two short beeps
+      const now = audioCtx.currentTime;
+      playTone(880, now, 0.1);
+      playTone(880, now + 0.2, 0.1);
+    } catch (error) {
+      console.error("Failed to play notification sound:", error);
+    }
+  }
+
   function endTimer() {
+    if (!isRunning) return;
+
+    setIsRunning(false);
+    setStarted(false);
     setDuration(Duration.fromMillis(0));
+    setMessage("Timer Ended");
+
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-    setStarted(false);
-    setIsRunning(false);
-    setMessage("Timer Ended");
+
+    playBeep();
+
+    if ("Notification" in window && Notification.permission === "granted") {
+      const notification = new Notification("Bigtime", {
+        body: "Timer Finished!",
+        icon: "/favicon.ico",
+        silent: true,
+      });
+      notification.onclick = (e) => {
+        e.preventDefault();
+        window.focus();
+        router.push("/timer");
+      };
+    }
   }
 
   return (
