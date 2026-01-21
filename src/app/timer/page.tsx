@@ -46,7 +46,7 @@ export default function Page() {
       e.currentTarget.dataset.touchStartY = touchMoveY.toString();
     } else if (e.type === "touchmove") {
       const touchStartY = parseFloat(
-        e.currentTarget.dataset.touchStartY || "0"
+        e.currentTarget.dataset.touchStartY || "0",
       );
       delta = touchMoveY - touchStartY;
 
@@ -164,8 +164,8 @@ function Mid({
         <span key={i} className="">
           <span className="relative group">
             <button
-              className={`absolute -top-0 left-1/2 -translate-x-1/2 px-6 hidden group-hover:block ${
-                started ? "cursor-not-allowed opacity-50" : "cursor-ns-resize"
+              className={`absolute -top-0 left-1/2 -translate-x-1/2 px-6 group-hover:block lg:hidden ${
+                started ? "cursor-not-allowed opacity-50" : "cursor-pointer"
               }`}
               onClick={() => update(unit, 1)}
             >
@@ -180,8 +180,8 @@ function Mid({
               {duration.toFormat("hh:mm:ss").split(":")[i]}
             </span>
             <button
-              className={`absolute -bottom-0 left-1/2 -translate-x-1/2 px-6 hidden group-hover:block ${
-                started ? "cursor-not-allowed opacity-50" : "cursor-ns-resize"
+              className={`absolute -bottom-0 left-1/2 -translate-x-1/2 px-6 group-hover:block lg:hidden ${
+                started ? "cursor-not-allowed opacity-50" : "cursor-pointer"
               }`}
               onClick={() => update(unit, -1)}
             >
